@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS `user` (
+    `id` BIGINT(255) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `user_id` VARCHAR(100) NOT NULL,
+    `email` VARCHAR(100) NOT NULL,
+    `salt` VARCHAR(100) NOT NULL,
+    `password_hash` VARCHAR(100) NOT NULL,
+    `created_at` BIGINT(255) UNSIGNED NOT NULL,
+    `updated_at` BIGINT(255) UNSIGNED NOT NULL,
+    `deleted` BOOLEAN NOT NULL DEFAULT FALSE,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `user_id` (`user_id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;

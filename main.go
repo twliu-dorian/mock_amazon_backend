@@ -11,9 +11,9 @@ import (
 
 	"mock_amazon_backend/apierror"
 	"mock_amazon_backend/config"
-	// "mock_amazon_backend/user"
-	"mock_amazon_backend/log"
 	"mock_amazon_backend/database"
+	"mock_amazon_backend/log"
+	"mock_amazon_backend/user"
 	"mock_amazon_backend/util"
 
 	"github.com/labstack/echo/v4"
@@ -46,8 +46,13 @@ func main() {
 	// e.Use(auth.CheckAuth())
 
 	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "This is gitlab.com/chelpis/keyvault/kms-module.git server")
+		return c.String(http.StatusOK, "This is mock amazon backend server")
 	})
+
+	var userController = new(user.Controller)
+	users := e.Group("/users")
+	users.POST("/signUp", userController.Create)
+	users.POST("/login", userController.Login)
 
 	go func() {
 		e.Logger.Info(log.LabelStartup, "Started successfully")
