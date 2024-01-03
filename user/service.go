@@ -21,7 +21,7 @@ func Create(obj *User) (created *User, err error) {
 		return
 	}
 
-	created, err = Get(obj.UserId)
+	created, err = Get(obj.Email)
 	if err != nil {
 		err = new(apierror.ApiError).From(err)
 		return
@@ -30,12 +30,28 @@ func Create(obj *User) (created *User, err error) {
 	return
 }
 
-func Get(userId string) (obj *User, err error) {
-	obj, err = dao.Get(userId)
+func Get(email string) (obj *User, err error) {
+	obj, err = dao.Get(email)
 	if err != nil {
 		err = new(apierror.ApiError).From(err)
 		return
 	}
+
+	return
+}
+
+func Login(request LoginRequest) (response LoginResponse, err error) {
+	user, err := Get(request.Email)
+	if err != nil {
+		err = new(apierror.ApiError).From(err)
+		return
+	}
+	if !user.ValidatePassword(request.Password) {
+		err = new(apierror.ApiError).FromMessage("invalid password").SetCode(apierror.AUTHENTICATION)
+		response.Valid = false
+		return
+	}
+	response.Valid = true
 
 	return
 }

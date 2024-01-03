@@ -18,7 +18,7 @@ type Request struct {
 }
 
 type User struct {
-	UserId       string         `json:"adminId" db:"user_id"`
+	UserId       string         `json:"userId" db:"user_id"`
 	Email        string         `json:"email" db:"email"`
 	Salt         util.Bytes     `json:"-" db:"salt"`
 	PasswordHash util.Bytes     `json:"-" db:"password_hash"`
@@ -59,6 +59,15 @@ func (u User) ValidatePassword(password string) bool {
 	hash := pbkdf2.Key([]byte(password), u.Salt, 10000, 64, sha512.New)
 
 	return bytes.Equal(u.PasswordHash, hash)
+}
+
+type LoginRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type LoginResponse struct {
+	Valid bool `json:"valid"`
 }
 
 // paging condition

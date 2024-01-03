@@ -50,7 +50,7 @@ func main() {
 	})
 
 	var userController = new(user.Controller)
-	users := e.Group("/users")
+	users := e.Group("/user")
 	users.POST("/signUp", userController.Create)
 	users.POST("/login", userController.Login)
 

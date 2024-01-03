@@ -68,8 +68,29 @@ func (dao *daoImplement) List(cond *Condition) (total int64, users []User, err e
 	return
 }
 
-func (dao *daoImplement) Get(id string) (user *User, err error) {
+func (dao *daoImplement) Get(email string) (user *User, err error) {
+	db, err := database.DB()
+	if err != nil {
+		err = new(apierror.ApiError).From(err)
+		return
+	}
 
+	query := `
+		SELECT
+			user.user_id,
+			user.salt,
+			user.password_hash,
+			user.email
+		FROM
+			user
+		WHERE
+			email = ?`
+	user = new(User)
+	err = db.Get(user, query, email)
+	if err != nil {
+		err = new(apierror.ApiError).From(err)
+		return
+	}
 	return
 }
 

@@ -45,31 +45,18 @@ func (Controller) Create(c echo.Context) (err error) {
 }
 
 func (Controller) Login(c echo.Context) (err error) {
-	var request struct {
-		Request
-		Password string `json:"password"`
-	}
+	var request LoginRequest
 
 	if err = c.Bind(&request); err != nil {
 		err = new(apierror.ApiError).From(err).SetCode(apierror.INPUT_ERROR)
 		return
 	}
-	if err = request.Validate(); err != nil {
-		err = new(apierror.ApiError).From(err).SetCode(apierror.INPUT_ERROR)
-		return
-	}
+
 	if err = validation.Validate(&request.Password, validation.Required); err != nil {
 		err = new(apierror.ApiError).From(err).SetCode(apierror.INPUT_ERROR)
 		return
 	}
-	obj := request.ToUser()
-	err = obj.SetupPassword(request.Password)
-	if err != nil {
-		err = new(apierror.ApiError).From(err)
-		return
-	}
-
-	response, err := Create(obj)
+	response, err := Login(request)
 	if err != nil {
 		err = new(apierror.ApiError).From(err)
 		return
